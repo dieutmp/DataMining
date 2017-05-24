@@ -50,14 +50,6 @@ public class TroncClassifier{
 		fc = new FilteredClassifier();
 		fc.setFilter(rm);
 		fc.setClassifier(cls);
-		
-//		String options = String.format("-t %s -T %s -c 18 -x 4 -s 1 -i", 
-//										trainFile, testFile, classIndex);
-//		String[] o = Utils.splitOptions(options);
-//		for (String s : o){
-//			System.out.println(s);
-//		}
-//		Evaluation.evaluateModel(fc, o);
 	
 	}
 	
@@ -86,36 +78,23 @@ public class TroncClassifier{
 		return sb.toString();
 	}
 	
-	public void evaluateTest(){
-		
-		
-	}
-	
-	private void writeResultToFile(String outFile, String content){
-		FileWriter fw = null;
-	    BufferedWriter bw = null;
-		try {
-			fw = new FileWriter(outFile);
-			bw = new BufferedWriter(fw);
-			bw.write(content);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				if (bw != null)
-					bw.close();
-
-				if (fw != null)
-					fw.close();
-
-			} catch (IOException ex) {
-
-				ex.printStackTrace();
-
-			}
-
-		}
-	 
+	public String[][] evaluateTest() throws Exception{
+		fc.buildClassifier(train);
+		int numInstances = test.numInstances();
+		int count = 0;
+		String[][] result = new String[2][numInstances];
+		for (int i = 0; i < numInstances; i++) {
+			   double pred = fc.classifyInstance(test.instance(i));
+			   String actual = test.classAttribute().value((int) test.instance(i).classValue());
+			   String predicted = test.classAttribute().value((int) pred);
+			   if (actual == predicted)
+				   count ++;
+			   result[0][i] = actual;
+			   result[1][i] = predicted;
+			   
+			 }
+		System.out.println("correct " + count);
+		System.out.println("in total: " + test.numInstances());
+		return result;
 	}
 }

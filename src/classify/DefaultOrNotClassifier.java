@@ -91,10 +91,26 @@ public class DefaultOrNotClassifier{
 		return sb.toString();
 	}
 	
-	public void evaluateTest(){
-		
-		
+	public String[][] evaluateTest() throws Exception{
+		fc.buildClassifier(train);
+		int numInstances = test.numInstances();
+		int count = 0;
+		String[][] result = new String[2][numInstances];
+		for (int i = 0; i < numInstances; i++) {
+			   double pred = fc.classifyInstance(test.instance(i));
+			   String actual = test.classAttribute().value((int) test.instance(i).classValue());
+			   String predicted = test.classAttribute().value((int) pred);
+			   if (actual == predicted)
+				   count ++;
+			   result[0][i] = actual;
+			   result[1][i] = predicted;
+			   
+			 }
+		System.out.println("correct " + count);
+		System.out.println("in total: " + test.numInstances());
+		return result;
 	}
+	
 	
 	private void writeResultToFile(String outFile, String content){
 		FileWriter fw = null;
