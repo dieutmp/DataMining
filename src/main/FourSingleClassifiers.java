@@ -4,20 +4,23 @@ import classify.ColletClassifier;
 import classify.HouppierClassifier;
 import classify.RacineClassifier;
 import classify.TroncClassifier;
+import weka.classifiers.functions.SGD;
+import weka.classifiers.rules.OneR;
 import weka.classifiers.trees.RandomForest;
 
-public class MultilabelMain {
+public class FourSingleClassifiers {
 	public static void main(String[] args) throws Exception {
-		String trainFile = "E:\\dieu\\fixed\\train_set1_semicolon_Fixed.arff";
-		String testFile = "E:\\dieu\\fixed\\test_set1_semicolon_Fixed.arff";
-		
+		String trainFile = "C:\\Users\\21609450t\\IT4BI\\DM\\phase2\\Fixed\\train_set1_semicolon_Fixed.arff";
+		String testFile = "C:\\Users\\21609450t\\IT4BI\\DM\\phase2\\Fixed\\test_set1_semicolon_Fixed.arff";
+//		SGD rd = new SGD();
 		RandomForest rd = new RandomForest();
 		rd.setNumIterations(10);
+		rd.setMaxDepth(7);
 		
 		ColletClassifier collet = new ColletClassifier(trainFile, testFile, rd);
-		HouppierClassifier houppier = new HouppierClassifier(trainFile, testFile, rd);
+		HouppierClassifier houppier = new HouppierClassifier(trainFile, testFile, new SGD());
 		TroncClassifier tronc = new TroncClassifier(trainFile, testFile, rd);
-		RacineClassifier racine = new RacineClassifier(trainFile, testFile, rd);
+		RacineClassifier racine = new RacineClassifier(trainFile, testFile, new OneR());
 		
 		String[][] colletResult = collet.evaluateTest();
 		String[][] houppierResult = houppier.evaluateTest();
